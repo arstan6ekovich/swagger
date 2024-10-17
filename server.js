@@ -3,29 +3,64 @@ const bodyParser = require("body-parser");
 const swaggerUi = require("swagger-ui-express");
 const fs = require("fs");
 const yaml = require("js-yaml");
+const bcrypt = require("bcrypt");
 
 const app = express();
-const port = 2003;
+const port = 1111;
 
 const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
+
+let users = [];
+
+app.use(bodyParser.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.post("/api/v1/register", async (req, res) => {
+  const { name, password } = req.body;
+
+  if (!name || !password) {
+    return res.status(400).send("Имя и пароль обязательны");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = { name, password: hashedPassword };
+  users.push(newUser);
+
+  res.status(201).json({ message: "Пользователь зарегистрирован" });
+});
+
+app.post("/api/v1/login", async (req, res) => {
+  const { name, password } = req.body;
+
+  const user = users.find((u) => u.name === name);
+  if (!user) {
+    return res.status(400).send("Неверное имя или пароль");
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    return res.status(400).send("Неверное имя или пароль");
+  }
+
+  res.json({ message: "Успешный вход в систему" });
+});
 
 let items = [
   { id: 1, name: "Item 1" },
   { id: 2, name: "Item 2" },
 ];
 
-app.use(bodyParser.json());
-
 app.get("/api/v1/items", (req, res) => {
   res.json(items);
 });
 
-app.get("/api/v1/items", async (req, res) => {
-  try {
-    res.json(items);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server Error");
+app.get("/api/v1/items/:id", (req, res) => {
+  const item = items.find((i) => i.id === parseInt(req.params.id));
+  if (item) {
+    res.json(item);
+  } else {
+    return res.status(404).send("Элемент не найден");
   }
 });
 
@@ -48,16 +83,6 @@ app.put("/api/v1/items/:id", (req, res) => {
   }
 });
 
-app.delete("/api/v1/items/:id", (req, res) => {
-  const index = items.findIndex((i) => i.id === parseInt(req.params.id));
-  if (index !== -1) {
-    const deletedItem = items.splice(index, 1);
-    res.json(deletedItem);
-  } else {
-    res.status(404).send("Элемент не найден");
-  }
-});
-
 app.patch("/api/v1/items/:id", (req, res) => {
   const item = items.find((i) => i.id === parseInt(req.params.id));
   if (item) {
@@ -70,7 +95,15 @@ app.patch("/api/v1/items/:id", (req, res) => {
   }
 });
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.delete("/api/v1/items/:id", (req, res) => {
+  const index = items.findIndex((i) => i.id === parseInt(req.params.id));
+  if (index !== -1) {
+    const deletedItem = items.splice(index, 1);
+    res.json(deletedItem);
+  } else {
+    res.status(404).send("Элемент не найден");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
