@@ -5,7 +5,7 @@ const fs = require("fs");
 const yaml = require("js-yaml");
 
 const app = express();
-const port = 2007;
+const port = 2003;
 
 const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
 
