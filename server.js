@@ -20,12 +20,12 @@ app.get("/api/v1/items", (req, res) => {
   res.json(items);
 });
 
-app.get("/api/v1/items/:id", (req, res) => {
-  const item = items.find((i) => i.id === parseInt(req.params.id));
-  if (item) {
-    res.json(item);
-  } else {
-    res.status(404).send("Элемент не найден");
+app.get("/api/v1/items", async (req, res) => {
+  try {
+    res.json(items);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
   }
 });
 
