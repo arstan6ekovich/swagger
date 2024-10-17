@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: MAR4IK DEV CRUD API
+  version: 1.0.0
+  description: Mar4ik Dev Swagger
+servers:
+  - url: http://localhost:2007
+paths:
+  /api/v1/items:
+    get:
+      summary: Получение списка всех элементов
+      responses:
+        200:
+          description: Список элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+    post:
+      summary: Создание нового элемента
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        201:
+          description: Элемент создан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+
+  /api/v1/items/{id}:
+    get:
+      summary: Получение элемента по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID элемента
+      responses:
+        200:
+          description: Найденный элемент
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+        404:
+          description: Элемент не найден
+    put:
+      summary: Обновление элемента по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID элемента
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: Элемент обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+        404:
+          description: Элемент не найден
+    patch:
+      summary: Частичное обновление элемента по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID элемента
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: Элемент частично обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+        404:
+          description: Элемент не найден
+    delete:
+      summary: Удаление элемента по ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID элемента
+      responses:
+        200:
+          description: Элемент удален
+        404:
+          description: Элемент не найден
