@@ -6,7 +6,7 @@ const yaml = require("js-yaml");
 const bcrypt = require("bcrypt");
 
 const app = express();
-const port = 2222;
+const port = 1000;
 
 const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
 
