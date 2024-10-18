@@ -6,7 +6,7 @@ const yaml = require("js-yaml");
 const bcrypt = require("bcrypt");
 
 const app = express();
-const port = 1111;
+const port = 3333;
 
 const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
 
@@ -104,7 +104,6 @@ app.delete("/api/v1/items/:id", (req, res) => {
     res.status(404).send("Элемент не найден");
   }
 });
-
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
