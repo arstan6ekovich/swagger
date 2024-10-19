@@ -13,7 +13,7 @@ const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
 
 let users = [];
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
