@@ -4,16 +4,25 @@ const swaggerUi = require("swagger-ui-express");
 const fs = require("fs");
 const yaml = require("js-yaml");
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 
 const app = express();
-const port = 1000;
+const port = process.env.PORT || 2007;
 
 const swaggerDocument = yaml.load(fs.readFileSync("./swagger.yaml", "utf8"));
 
 let users = [];
 
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
+// Настройка Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.post("/api/v1/register", async (req, res) => {
@@ -104,6 +113,7 @@ app.delete("/api/v1/items/:id", (req, res) => {
     res.status(404).send("Элемент не найден");
   }
 });
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}/api-docs`);
 });
