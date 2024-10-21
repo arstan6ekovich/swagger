@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Mar4ik Dev Swagger
 servers:
-  - url: https://{your-app-name}.herokuapp.com
+  - url: http://localhost:3000
 paths:
   /api/v1/items:
     get:
@@ -48,6 +48,7 @@ paths:
                     type: integer
                   name:
                     type: string
+
   /api/v1/items/{id}:
     get:
       summary: Получение элемента по ID
@@ -152,6 +153,7 @@ paths:
           description: Элемент удален
         404:
           description: Элемент не найден
+
   /api/v1/register:
     post:
       summary: Регистрация пользователя
@@ -174,6 +176,7 @@ paths:
           description: Пользователь зарегистрирован
         400:
           description: Имя и пароль обязательны
+
   /api/v1/login:
     post:
       summary: Вход пользователя
