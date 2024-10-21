@@ -21,7 +21,6 @@ app.use(
   })
 );
 
-// Настройка Swagger UI
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.post("/api/v1/register", async (req, res) => {
